@@ -1,0 +1,324 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="card">
+            <div class="card-header text-center bg-primary text-white py-4">
+                <h1 class="h3 mb-0">🚗 پیش‌بینی قیمت خودرو</h1>
+                <p class="mb-0 opacity-75">با استفاده از داده‌های واقعی از دیوار</p>
+            </div>
+            
+            <div class="card-body p-4">
+                <!-- Step Indicators -->
+                <div class="step-indicator">
+                    <div class="step active" id="step1">
+                        <div class="step-circle">1</div>
+                        <small>مشخصات خودرو</small>
+                    </div>
+                    <div class="step" id="step2">
+                        <div class="step-circle">2</div>
+                        <small>جستجوی آگهی‌ها</small>
+                    </div>
+                    <div class="step" id="step3">
+                        <div class="step-circle">3</div>
+                        <small>استخراج اطلاعات</small>
+                    </div>
+                    <div class="step" id="step4">
+                        <div class="step-circle">4</div>
+                        <small>آموزش مدل</small>
+                    </div>
+                    <div class="step" id="step5">
+                        <div class="step-circle">5</div>
+                        <small>نتیجه</small>
+                    </div>
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="mb-4">
+                    <div class="progress">
+                        <div id="progressBar" class="progress-bar" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <!-- Step 1: Car Specifications Form -->
+                <div id="step1-content">
+                    <form id="carForm">
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label class="form-label">برند و مدل خودرو</label>
+                                <input type="text" class="form-control" name="brand_model" 
+                                       placeholder="مثال: پژو 206 تیپ ۲" required>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label class="form-label">سال ساخت</label>
+                                <input type="number" class="form-control" name="year_model" 
+                                       min="1350" max="1410" placeholder="مثال: 1400" required>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label class="form-label">کارکرد (کیلومتر)</label>
+                                <input type="number" class="form-control" name="mileage" 
+                                       placeholder="مثال: 80000" required>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label class="form-label">گیربکس</label>
+                                <select class="form-select" name="gearbox" required>
+                                    <option value="">انتخاب کنید</option>
+                                    <option value="دنده ای">دنده ای</option>
+                                    <option value="اتوماتیک">اتوماتیک</option>
+                                </select>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label class="form-label">نوع سوخت</label>
+                                <select class="form-select" name="fuel_type" required>
+                                    <option value="">انتخاب کنید</option>
+                                    <option value="بنزین">بنزین</option>
+                                    <option value="دوگانه‌سوز شرکتی">دوگانه‌سوز شرکتی</option>
+                                    <option value="دوگانه‌سوز دستی">دوگانه‌سوز دستی</option>
+                                    <option value="برقی">برقی</option>
+                                    <option value="هیبرید">هیبرید</option>
+                                    <option value="گازوئیل">گازوئیل</option>
+                                    <option value="پلاگین هیبرید">پلاگین هیبرید</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-4">
+                            <button type="submit" class="btn btn-primary w-100 py-3">
+                                <i class="bi bi-calculator me-2"></i>
+                                شروع پیش‌بینی قیمت
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Step 2-4: Progress Content -->
+                <div id="progress-content" style="display: none;">
+                    <div class="text-center py-4">
+                        <div class="spinner-border text-primary mb-3" role="status">
+                            <span class="visually-hidden">در حال بارگذاری...</span>
+                        </div>
+                        <h5 id="progress-title" class="mb-2">در حال پردازش...</h5>
+                        <p id="progress-message" class="text-muted">لطفا چند لحظه صبر کنید</p>
+                        <div class="mt-3">
+                            <span id="progress-details" class="badge bg-secondary"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 5: Results -->
+                <div id="results-content" style="display: none;">
+                    <div class="text-center py-4">
+                        <div class="mb-4">
+                            <i class="bi bi-check-circle-fill text-success" style="font-size: 4rem;"></i>
+                        </div>
+                        <h4 class="text-success mb-3">پیش‌بینی قیمت انجام شد!</h4>
+                        
+                        <div class="card bg-light mb-4">
+                            <div class="card-body">
+                                <h2 id="predicted-price" class="text-primary mb-0"></h2>
+                                <small class="text-muted">قیمت پیش‌بینی شده</small>
+                            </div>
+                        </div>
+                        
+                        <div class="row text-start mb-4">
+                            <div class="col-6">
+                                <small class="text-muted">برند و مدل</small>
+                                <p id="result-brand" class="mb-2 fw-bold"></p>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-muted">سال ساخت</small>
+                                <p id="result-year" class="mb-2 fw-bold"></p>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-muted">کارکرد</small>
+                                <p id="result-mileage" class="mb-2 fw-bold"></p>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-muted">گیربکس</small>
+                                <p id="result-gearbox" class="mb-2 fw-bold"></p>
+                            </div>
+                        </div>
+                        
+                        <button onclick="location.reload()" class="btn btn-outline-primary">
+                            <i class="bi bi-arrow-repeat me-2"></i>
+                            پیش‌بینی جدید
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Error Message -->
+                <div id="error-message" class="alert alert-danger mt-3" style="display: none;">
+                    <i class="bi bi-exclamation-triangle me-2"></i>
+                    <span id="error-text"></span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Info Card -->
+        <div class="card mt-4">
+            <div class="card-body">
+                <h6 class="card-title">📊 درباره این سرویس</h6>
+                <p class="card-text small mb-2">
+                    این سرویس با استفاده از داده‌های واقعی از سایت دیوار و الگوریتم‌های 
+                    یادگیری ماشین، قیمت خودروی شما را پیش‌بینی می‌کند.
+                </p>
+                <ul class="small text-muted mb-0">
+                    <li>داده‌ها مستقیماً از آگهی‌های دیوار جمع‌آوری می‌شوند</li>
+                    <li>مدل ML برای هر درخواست به صورت اختصاصی آموزش داده می‌شود</li>
+                    <li>نتایج بر اساس بازار واقعی خودرو محاسبه می‌شوند</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Progress tracking
+let currentStep = 1;
+
+function updateProgress(step, message = '') {
+    // Update step indicators
+    document.querySelectorAll('.step').forEach((s, index) => {
+        if (index + 1 < step) {
+            s.classList.add('completed');
+            s.classList.remove('active');
+        } else if (index + 1 === step) {
+            s.classList.add('active');
+            s.classList.remove('completed');
+        } else {
+            s.classList.remove('active', 'completed');
+        }
+    });
+    
+    // Update progress bar
+    const progress = ((step - 1) / 4) * 100;
+    document.getElementById('progressBar').style.width = `${progress}%`;
+    
+    // Update progress message
+    if (message) {
+        document.getElementById('progress-message').textContent = message;
+    }
+}
+
+// Form submission
+document.getElementById('carForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    const submitBtn = this.querySelector('button[type="submit"]');
+    
+    // Show loading state
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="bi bi-hourglass-split me-2"></i>در حال پردازش...';
+    
+    try {
+        // Step 1: Submit form data
+        const response = await fetch('/predict', {
+            method: 'POST',
+            body: formData
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            // Hide form, show progress
+            document.getElementById('step1-content').style.display = 'none';
+            document.getElementById('progress-content').style.display = 'block';
+            document.getElementById('error-message').style.display = 'none';
+            
+            // Start the pipeline
+            await runPipeline();
+        } else {
+            throw new Error(data.error);
+        }
+        
+    } catch (error) {
+        showError(error.message);
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="bi bi-calculator me-2"></i>شروع پیش‌بینی قیمت';
+    }
+});
+
+async function runPipeline() {
+    try {
+        // Step 2: Search for ads
+        updateProgress(2, 'در حال جستجوی آگهی‌های مشابه در دیوار...');
+        let response = await fetch('/search_ads');
+        let data = await response.json();
+        
+        if (!data.success) throw new Error(data.error);
+        
+        document.getElementById('progress-details').textContent = `${data.urls_count} آگهی پیدا شد`;
+        
+        // Step 3: Scrape data
+        updateProgress(3, 'در حال استخراج اطلاعات از آگهی‌ها...');
+        response = await fetch('/scrape_data');
+        data = await response.json();
+        
+        if (!data.success) throw new Error(data.error);
+        
+        document.getElementById('progress-details').textContent = `${data.ads_count} آگهی پردازش شد`;
+        
+        // Step 4: Train model
+        updateProgress(4, 'در حال آموزش مدل هوش مصنوعی...');
+        response = await fetch('/train_model');
+        data = await response.json();
+        
+        if (!data.success) throw new Error(data.error);
+        
+        document.getElementById('progress-details').textContent = `مدل با ${data.samples_count} داده آموزش داده شد`;
+        
+        // Step 5: Get prediction
+        updateProgress(5, 'در حال محاسبه قیمت...');
+        response = await fetch('/get_prediction');
+        data = await response.json();
+        
+        if (!data.success) throw new Error(data.error);
+        
+        // Show results
+        showResults(data);
+        
+    } catch (error) {
+        showError(error.message);
+    }
+}
+
+function showResults(data) {
+    document.getElementById('progress-content').style.display = 'none';
+    document.getElementById('results-content').style.display = 'block';
+    
+    // Update results
+    document.getElementById('predicted-price').textContent = data.formatted_price + ' تومان';
+    document.getElementById('result-brand').textContent = data.car_info.brand_model;
+    document.getElementById('result-year').textContent = data.car_info.year_model;
+    document.getElementById('result-mileage').textContent = data.car_info.mileage.toLocaleString() + ' کیلومتر';
+    document.getElementById('result-gearbox').textContent = data.car_info.gearbox;
+    
+    updateProgress(5);
+}
+
+function showError(message) {
+    document.getElementById('error-text').textContent = message;
+    document.getElementById('error-message').style.display = 'block';
+    
+    // Show form again
+    document.getElementById('step1-content').style.display = 'block';
+    document.getElementById('progress-content').style.display = 'none';
+    document.getElementById('results-content').style.display = 'none';
+    
+    // Reset form button
+    const submitBtn = document.querySelector('#carForm button[type="submit"]');
+    submitBtn.disabled = false;
+    submitBtn.innerHTML = '<i class="bi bi-calculator me-2"></i>شروع پیش‌بینی قیمت';
+    
+    updateProgress(1);
+}
+</script>
+{% endblock %}
