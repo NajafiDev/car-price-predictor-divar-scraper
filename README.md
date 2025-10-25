@@ -1,6 +1,5 @@
 
 
-```markdown
 # 🚗 Car Price Predictor - Divar Scraper
 
 <div align="center">
