@@ -43,8 +43,8 @@
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/car-price-predictor.git
-   cd car-price-predictor
+   git clone https://github.com/NajafiDev/car-price-predictor-divar-scraper.git
+   cd car-price-predictor-divar-scraper
    ```
 
 2. **Create virtual environment**
