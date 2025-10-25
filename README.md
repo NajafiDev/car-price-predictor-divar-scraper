@@ -240,7 +240,7 @@ If you have any questions or need help:
 ⭐ **Star this repo if you find it helpful!**
 
 </div>
-```
+
 
 
 ## requirements.txt
