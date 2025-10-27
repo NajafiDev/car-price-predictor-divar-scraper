@@ -10,11 +10,12 @@
 ![Selenium](https://img.shields.io/badge/Selenium-4.15.0-red)
 ![License](https://img.shields.io/badge/License-MIT-yellow)
 
-**A intelligent web application that predicts car prices using real data from Divar.ir with Machine Learning**
+**An intelligent web application that predicts car prices using real data from Divar.ir with Machine Learning**
 
 [Features](#-features) • [Demo](#-demo) • [Installation](#-installation) • [Usage](#-usage) • [Project Structure](#-project-structure) • [API](#-api) • [Contributing](#-contributing)
 
 </div>
+
 
 
 ## 🌟 Features
@@ -27,9 +28,11 @@
 - **💾 Data Persistence**: Save search history and trained models
 
 
+
 ## 🎥 Demo
 
 ![Project Demo GIF](DemoGIF/Project-demo.gif)
+
 
 
 ## 🚀 Installation
@@ -69,6 +72,7 @@
    ```
 
 
+
 ## 📖 Usage
 
 ### Web Application
@@ -81,6 +85,7 @@
 ```bash
 python main_pipeline.py
 ```
+
 
 
 ## 🏗️ Project Structure
@@ -108,6 +113,7 @@ car-price-predictor-divar-scraper/
 ```
 
 
+
 ## 🔧 API Endpoints
 
 | Endpoint | Method | Description |
@@ -119,6 +125,7 @@ car-price-predictor-divar-scraper/
 | `/train_model` | GET | Train ML model |
 | `/get_prediction` | GET | Get price prediction |
 | `/status` | GET | Check progress status |
+
 
 
 ## 🤖 Machine Learning
@@ -133,6 +140,7 @@ car-price-predictor-divar-scraper/
 - **Accuracy**: R² Score up to 0.85+
 - **Error Margin**: ±50 million Tomans
 - **Training Time**: 2-5 minutes per request
+
 
 
 ## 🛠️ Technology Stack
@@ -155,6 +163,7 @@ car-price-predictor-divar-scraper/
 - **Browser Automation**: ChromeDriver
 
 
+
 ## 📊 Data Flow
 
 ```mermaid
@@ -166,6 +175,7 @@ graph LR
     E --> F[Price Prediction]
     F --> G[Results Display]
 ```
+
 
 
 ## 🚀 Deployment
@@ -201,18 +211,6 @@ We love contributions! Here's how you can help:
 4. **Push** to the branch (`git push origin feature/amazing-feature`)
 5. **Open** a Pull Request
 
-
-### Development Setup
-```bash
-# Install development dependencies
-pip install -r requirements-dev.txt
-
-# Run tests
-python -m pytest tests/
-
-# Code formatting
-black .
-```
 
 
 ## 🙏 Acknowledgments
